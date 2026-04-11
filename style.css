@@ -1,0 +1,15 @@
+/* Ajuste de altura del carrusel */
+.carousel-item img {
+    height: 400px;
+    object-fit: cover; /* Evita que las imágenes se deformen */
+}
+
+/* Color de fondo para que combine con tus proyectos anteriores */
+body {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+header {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
