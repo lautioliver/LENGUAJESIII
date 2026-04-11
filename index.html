@@ -3,110 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TP1 - Lenguajes III</title>
+    <title>Mastering HTML & CSS - Lenguajes III</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <style>
-        body {
-            background-color: #0E4678; /* Tu color original */
-            color: white;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        .carousel-item img {
-            height: 400px;
-            object-fit: cover;
-        }
-        main { flex: 1; }
-        .info-card {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            backdrop-filter: blur(5px);
-        }
-        footer a { color: #00d4ff; text-decoration: none; }
-        footer a:hover { text-decoration: underline; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header>
-        <div id="headerCarousel" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#headerCarousel" data-bs-slide-to="0" class="active"></button>
-                <button type="button" data-bs-target="#headerCarousel" data-bs-slide-to="1"></button>
-                <button type="button" data-bs-target="#headerCarousel" data-bs-slide-to="2"></button>
-            </div>
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="https://images.unsplash.com/photo-1510915228340-29c85a43dcfe" class="d-block w-100" alt="Slide 1">
-                    <div class="carousel-caption">
-                        <h5 class="animate__animated animate__fadeInDown">Innovación</h5>
-                        <p>Aprendiendo Lenguajes III con Bootstrap.</p>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6" class="d-block w-100" alt="Slide 2">
-                    <div class="carousel-caption">
-                        <h5>Desarrollo Web</h5>
-                        <p>Estructuras dinámicas y responsivas.</p>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085" class="d-block w-100" alt="Slide 3">
-                    <div class="carousel-caption">
-                        <h5>Sistemas</h5>
-                        <p>Integración de herramientas modernas.</p>
-                    </div>
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#headerCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">DEV<span class="text-primary">LEARN</span></a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#headerCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="#">Estructura</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Estilos</a></li>
+                    <li class="nav-item ms-lg-3">
+                        <button class="btn btn-outline-light btn-sm px-4 rounded-pill">Ver Código</button>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <button class="btn btn-primary btn-sm px-4 rounded-pill shadow-blue">Iniciar Práctica</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-section">
+        <div id="learningCarousel" class="carousel slide carousel-fade h-100" data-bs-ride="carousel">
+            <div class="carousel-inner h-100">
+                <div class="carousel-item active h-100">
+                    <div class="carousel-overlay"></div>
+                    <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&q=80&w=1600" class="d-block w-100 h-100 object-fit-cover" alt="Coding">
+                    <div class="carousel-caption text-start animate__animated animate__fadeInLeft">
+                        <span class="badge bg-primary mb-3 rounded-pill">Módulo 01</span>
+                        <h1 class="display-3 fw-800">Estructura <br><span class="text-gradient">Semántica</span></h1>
+                        <p class="lead opacity-75">Aprendiendo a organizar contenido de forma lógica y accesible para la web moderna.</p>
+                    </div>
+                </div>
+                <div class="carousel-item h-100">
+                    <div class="carousel-overlay"></div>
+                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1600" class="d-block w-100 h-100 object-fit-cover" alt="Design">
+                    <div class="carousel-caption text-start">
+                        <span class="badge bg-info mb-3 rounded-pill">Módulo 02</span>
+                        <h1 class="display-3 fw-800">Estilos con <br><span class="text-gradient">Flex & Grid</span></h1>
+                        <p class="lead opacity-75">Dominando el diseño responsivo y las interfaces de usuario de alto impacto.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-controls-custom">
+                <button class="btn-ctrl" data-bs-target="#learningCarousel" data-bs-slide="prev">←</button>
+                <button class="btn-ctrl" data-bs-target="#learningCarousel" data-bs-slide="next">→</button>
+            </div>
         </div>
     </header>
 
-    <main class="container my-5">
-        <div class="info-card animate__animated animate__fadeInUp">
-            <h2 class="text-center mb-4">Contenido de la Página</h2>
-            <p class="lead text-center">Esto siempre será una prueba con el fin de aprender.</p>
-            <div class="row align-items-center mt-4">
-                <div class="col-md-6">
-                    <p>En esta sección documentamos el progreso del TP1. Hemos logrado integrar:</p>
-                    <ul>
-                        <li>Carrusel dinámico con Bootstrap.</li>
-                        <li>Uso de librerías externas vía CDN.</li>
-                        <li>Estilos personalizados sobre el framework.</li>
-                    </ul>
+    <main class="container my-5 py-5">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6 animate__animated animate__fadeIn">
+                <h2 class="fw-bold mb-4">El camino del <br><span class="text-primary">Ingeniero Informático</span></h2>
+                <p class="text-secondary">Este proyecto es una práctica activa para la materia <strong>Lenguajes III</strong> en la <strong>UCASAL</strong>. Aquí exploramos cómo las herramientas básicas (HTML5) se combinan con frameworks avanzados (Bootstrap) para crear soluciones reales.</p>
+                <div class="mt-4 glass-card p-3 d-flex align-items-center">
+                    <div class="icon-box me-3">🚀</div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">Objetivo del TP</h6>
+                        <small class="opacity-50">Dominar la integración de componentes dinámicos.</small>
+                    </div>
                 </div>
-                <div class="col-md-6 text-center">
-                    <img src="image.png" class="img-fluid rounded shadow" alt="Imagen de prueba" onerror="this.src='https://via.placeholder.com/300x200?text=Imagen+de+Prueba'">
+            </div>
+            <div class="col-lg-6">
+                <div class="video-container glass-card p-2 animate__animated animate__zoomIn">
+                    <div class="ratio ratio-16x9 rounded-4 overflow-hidden">
+                        <iframe src="https://www.youtube.com/embed/f6dnI1WsFrA" allowfullscreen></iframe>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <footer class="bg-dark text-white pt-4 pb-3 mt-auto">
-        <div class="container text-center">
-            <div class="row">
-                <div class="col-md-12 mb-3">
-                    <p class="mb-1">Información tomada de:</p>
-                    <a href="https://getbootstrap.com" target="_blank">Documentación Oficial de Bootstrap</a>
+    <footer class="footer mt-auto py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-4 text-center text-md-start">
+                    <h5 class="fw-bold text-white mb-1">DEVLEARN<span class="text-primary">.io</span></h5>
+                    <p class="small opacity-50">Práctica de Desarrollo Web · 2026</p>
                 </div>
-                <div class="col-md-12 mb-3">
-                    <p class="mb-2">Sígueme en mis redes:</p>
-                    <a href="https://instagram.com" target="_blank">
-                        <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" alt="Instagram">
-                    </a>
+                <div class="col-md-4 text-center">
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="#" class="social-link">IG</a>
+                        <a href="#" class="social-link">GH</a>
+                        <a href="#" class="social-link">LI</a>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center text-md-end">
+                    <p class="small mb-0">Alumno: <strong>Tu Nombre</strong></p>
+                    <p class="small text-primary mb-0">UCASAL · Salta, Argentina</p>
                 </div>
             </div>
-            <hr class="bg-light">
-            <p class="small mb-0">Autor: <strong>Oliver Lautaro Zahir</strong> - 2026</p>
-            <p class="small text-secondary">UCASAL · Salta, Argentina</p>
+            <hr class="mt-4 border-secondary opacity-10">
+            <p class="text-center x-small opacity-25">Información técnica basada en la documentación oficial de Bootstrap.</p>
         </div>
     </footer>
 

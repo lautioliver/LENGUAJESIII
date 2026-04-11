@@ -1,15 +1,67 @@
-/* Ajuste de altura del carrusel */
-.carousel-item img {
-    height: 400px;
-    object-fit: cover; /* Evita que las imágenes se deformen */
+:root {
+    --bg-dark: #020617;
+    --primary: #3b82f6;
+    --accent: #06b6d4;
+    --glass: rgba(255, 255, 255, 0.03);
 }
 
-/* Color de fondo para que combine con tus proyectos anteriores */
 body {
-    background-color: #f8f9fa;
-    color: #333;
+    background-color: var(--bg-dark);
+    color: #f1f5f9;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-header {
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+/* Navbar */
+.navbar {
+    background: rgba(2, 6, 23, 0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
+
+/* Hero & Carrusel */
+.hero-section { height: 75vh; position: relative; }
+.carousel-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to right, var(--bg-dark) 20%, transparent 100%);
+    z-index: 1;
+}
+
+.carousel-caption {
+    z-index: 2; top: 30%; bottom: auto; max-width: 550px;
+}
+
+.text-gradient {
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.fw-800 { font-weight: 800; }
+
+/* Controles de Carrusel Personalizados */
+.carousel-controls-custom {
+    position: absolute; bottom: 40px; right: 10%; z-index: 3; display: flex; gap: 10px;
+}
+.btn-ctrl {
+    background: var(--glass); border: 1px solid rgba(255,255,255,0.1);
+    color: white; padding: 10px 20px; border-radius: 50px; transition: 0.3s;
+}
+.btn-ctrl:hover { background: var(--primary); transform: scale(1.1); }
+
+/* Glassmorphism */
+.glass-card {
+    background: var(--glass);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.shadow-blue { box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3); }
+
+/* Footer */
+.footer { background: #010409; border-top: 1px solid rgba(255,255,255,0.05); }
+.social-link {
+    color: white; opacity: 0.5; text-decoration: none; font-weight: bold; font-size: 0.8rem;
+}
+.social-link:hover { opacity: 1; color: var(--primary); }
