@@ -1,11 +1,21 @@
 /**
  * Footer — Pie de página profesional con columnas, branding y micro-animaciones
- * Usa variables de index.css: --text, --text-h, --bg, --border, --accent, --accent-bg, --accent-border
+ * Paleta teal derivada de #7DD3C8
  */
+
+/* ─── Tokens del footer (derivados de #7DD3C8) ──────────────────────────────── */
+.footer {
+    --ft-teal: #7DD3C8;
+    --ft-teal-light: #A3E4DC;
+    --ft-teal-dark: #5BBFB3;
+    --ft-teal-bg: rgba(125, 211, 200, 0.10);
+    --ft-teal-border: rgba(125, 211, 200, 0.35);
+    --ft-teal-glow: rgba(125, 211, 200, 0.25);
+}
 
 /* ─── Layout principal ───────────────────────────────────────────────────────── */
 .footer {
-    background: var(--bg);
+    background: #000;
     padding: 0;
     display: flex;
     flex-direction: column;
@@ -17,22 +27,27 @@
 /* ─── Línea de acento animada ────────────────────────────────────────────────── */
 .footer-accent-line {
     height: 2px;
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        var(--accent) 20%,
-        var(--accent-border) 50%,
-        var(--accent) 80%,
-        transparent 100%
-    );
+    background: linear-gradient(90deg,
+            transparent 0%,
+            var(--ft-teal) 20%,
+            var(--ft-teal-light) 50%,
+            var(--ft-teal) 80%,
+            transparent 100%);
     opacity: 0.6;
     background-size: 200% 100%;
     animation: shimmer 4s ease-in-out infinite;
 }
 
 @keyframes shimmer {
-    0%, 100% { background-position: 200% 0; }
-    50% { background-position: -200% 0; }
+
+    0%,
+    100% {
+        background-position: 200% 0;
+    }
+
+    50% {
+        background-position: -200% 0;
+    }
 }
 
 /* ─── Fila principal (4 columnas) ────────────────────────────────────────────── */
@@ -58,7 +73,7 @@
     font-size: 9px;
     letter-spacing: 2.5px;
     text-transform: uppercase;
-    color: var(--text-h);
+    color: var(--muted);
     margin-bottom: 12px;
     display: flex;
     align-items: center;
@@ -70,7 +85,7 @@
     content: '';
     width: 16px;
     height: 2px;
-    background: linear-gradient(90deg, var(--accent), transparent);
+    background: linear-gradient(90deg, var(--ft-teal), transparent);
     display: inline-block;
     border-radius: 1px;
 }
@@ -95,20 +110,29 @@
 }
 
 .footer-logo-icon {
-    color: var(--accent);
+    color: var(--ft-teal);
     font-size: 18px;
     animation: pulse-glow 3s ease-in-out infinite;
 }
 
 @keyframes pulse-glow {
-    0%, 100% { opacity: 0.7; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.1); }
+
+    0%,
+    100% {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
 }
 
 .footer-tagline {
     font-size: 11px;
     font-style: italic;
-    color: var(--accent);
+    color: var(--ft-teal);
     letter-spacing: 0.3px;
     opacity: 0.85;
 }
@@ -143,11 +167,11 @@
 }
 
 .footer-social-btn:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: var(--accent-bg);
+    border-color: var(--ft-teal);
+    color: var(--ft-teal);
+    background: var(--ft-teal-bg);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px var(--accent-bg);
+    box-shadow: 0 4px 12px var(--ft-teal-glow);
 }
 
 /* ─── Links ──────────────────────────────────────────────────────────────────── */
@@ -180,14 +204,14 @@ a.footer-link::before {
     transform: translateY(-50%) scaleX(0);
     width: 3px;
     height: 60%;
-    background: var(--accent);
+    background: var(--ft-teal);
     border-radius: 2px;
     transition: transform 0.25s ease;
 }
 
 a.footer-link:hover {
-    color: var(--accent);
-    background: var(--accent-bg);
+    color: var(--ft-teal);
+    background: var(--ft-teal-bg);
     padding-left: 14px;
 }
 
@@ -235,42 +259,40 @@ a.footer-link:hover .footer-icon {
 }
 
 .footer-tech-dot.react {
-    background: #61dafb;
-    box-shadow: 0 0 0 rgba(97, 218, 251, 0);
+    background: var(--ft-teal-light);
+    box-shadow: 0 0 0 rgba(125, 211, 200, 0);
 }
 
 .footer-link.static:hover .footer-tech-dot.react {
-    box-shadow: 0 0 8px rgba(97, 218, 251, 0.6);
+    box-shadow: 0 0 8px var(--ft-teal-glow);
 }
 
 .footer-tech-dot.express {
-    background: #68a063;
-    box-shadow: 0 0 0 rgba(104, 160, 99, 0);
+    background: var(--ft-teal);
+    box-shadow: 0 0 0 rgba(125, 211, 200, 0);
 }
 
 .footer-link.static:hover .footer-tech-dot.express {
-    box-shadow: 0 0 8px rgba(104, 160, 99, 0.6);
+    box-shadow: 0 0 8px var(--ft-teal-glow);
 }
 
 .footer-tech-dot.openai {
-    background: #10a37f;
-    box-shadow: 0 0 0 rgba(16, 163, 127, 0);
+    background: var(--ft-teal-dark);
+    box-shadow: 0 0 0 rgba(91, 191, 179, 0);
 }
 
 .footer-link.static:hover .footer-tech-dot.openai {
-    box-shadow: 0 0 8px rgba(16, 163, 127, 0.6);
+    box-shadow: 0 0 8px rgba(91, 191, 179, 0.6);
 }
 
 /* ─── Divider con gradiente ──────────────────────────────────────────────────── */
 .footer-divider {
     height: 1px;
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        var(--border) 15%,
-        var(--border) 85%,
-        transparent 100%
-    );
+    background: linear-gradient(90deg,
+            transparent 0%,
+            var(--border) 15%,
+            var(--border) 85%,
+            transparent 100%);
     margin: 0 48px;
 }
 
@@ -305,11 +327,11 @@ a.footer-link:hover .footer-icon {
     font-size: 9px;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--ft-teal);
     padding: 4px 14px;
-    border: 1px solid var(--accent-border);
+    border: 1px solid var(--ft-teal-border);
     border-radius: 20px;
-    background: var(--accent-bg);
+    background: var(--ft-teal-bg);
     white-space: nowrap;
     font-weight: 600;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -317,11 +339,11 @@ a.footer-link:hover .footer-icon {
 }
 
 .footer-version:hover {
-    background: var(--accent);
-    color: var(--bg);
-    border-color: var(--accent);
+    background: var(--ft-teal);
+    color: #000;
+    border-color: var(--ft-teal);
     transform: scale(1.05);
-    box-shadow: 0 2px 12px var(--accent-bg);
+    box-shadow: 0 2px 12px var(--ft-teal-glow);
 }
 
 .footer-tech {

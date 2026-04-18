@@ -37,7 +37,8 @@ export const Footer = () => {
                 </div>
 
                 <div className="footer-col">
-                    <span className="footer-col-title">Info</span>
+                    <span className="footer-col-title">Proyectos</span>
+                    <span className="footer-col">Info</span>
                     <div className="footer-links">
                         <span className="footer-link static">UCASAL · Salta, Argentina</span>
                         <span className="footer-link static">Lenguajes III · {currentYear}</span>
