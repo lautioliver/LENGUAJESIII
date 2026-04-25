@@ -1,0 +1,908 @@
+/*
+ * styles.css — Gestor de Tareas de Proyecto (TP6)
+ * Lenguajes III · UCASAL · 2026
+ *
+ * Design system heredado del TP5 (register page + footer).
+ * Se reutilizan las mismas clases para mantener coherencia visual entre TPs.
+ *
+ * Paleta: tema oscuro basado en @media (prefers-color-scheme: dark) del TP5.
+ * Los tokens --teal, --dark, --muted, --surface y --cream están invertidos
+ * respecto al tema claro (ej: --dark ahora es #f3f4f6, un blanco grisáceo).
+ *
+ * Tipografía:
+ *   - DM Serif Display para títulos (h1)
+ *   - DM Mono para inputs, labels y contenido técnico
+ *   - system-ui como fallback general
+ *
+ * Animaciones:
+ *   Se usa translate3d() en vez de translateX/Y para forzar GPU compositing.
+ *   will-change se aplica solo a elementos que realmente animan para evitar
+ *   consumo innecesario de memoria de la GPU.
+ *   Todas las transiciones usan cubic-bezier específicos en vez de 'ease'
+ *   genérico: (0.4, 0, 0.2, 1) para interacciones, (0.16, 1, 0.3, 1) para entradas.
+ *
+ * Estructura del archivo:
+ *   1. Tokens y reset
+ *   2. Layout principal (register-*)
+ *   3. Formulario (form-*)
+ *   4. Tabla y badges de prioridad
+ *   5. DataTables overrides
+ *   6. Toast notifications
+ *   7. Footer (portado de footer.css del TP5)
+ *   8. Keyframes
+ *   9. Responsive y accesibilidad
+ */
+
+/*
+ * Tokens: versión oscura del TP5.
+ * En el TP5, estos valores viven dentro de @media (prefers-color-scheme: dark).
+ * Acá se usan directamente porque la app solo tiene un tema.
+ */
+:root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+    --code-bg: #1f2028;
+    --accent: #c084fc;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow: rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+
+    --teal: #7dd3c8;
+    --dark: #f3f4f6;
+    --muted: #9ca3af;
+    --surface: #1f2028;
+    --cream: #16171d;
+
+    --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+    --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+    --mono: 'DM Mono', ui-monospace, Consolas, monospace;
+
+    font: 18px/145% var(--sans);
+    letter-spacing: 0.18px;
+    color: var(--text);
+    background: var(--bg);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Reset ──────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body { margin: 0; }
+
+#root {
+    max-width: 100%;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+h1, h2 {
+    font-family: var(--heading);
+    font-weight: 500;
+    color: var(--text-h);
+}
+
+
+
+/*
+ * Layout: se reutilizan las clases .register-* del TP5 para no duplicar CSS.
+ * El max-width de 780px es más ancho que el del TP5 (480px) porque
+ * la tabla necesita espacio horizontal para las tres columnas.
+ */
+.register {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 60px 40px;
+    animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    flex: 1;
+    will-change: opacity, transform;
+}
+
+/* ─── Header ─────────────────────────────────────────────────────────────────── */
+.register-header {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.register-eyebrow {
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 500;
+}
+
+.register-eyebrow::before,
+.register-eyebrow::after {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--teal);
+}
+
+.register-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    line-height: 1.2;
+    font-weight: 400;
+    color: var(--dark);
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.register-title em {
+    font-style: italic;
+    color: var(--teal);
+    transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.register-subtitle {
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-top: 12px;
+}
+
+/*
+ * Form container: fondo var(--surface) (#1f2028) con borde sutil.
+ * La sombra es más fuerte que en tema claro para que se note sobre el fondo oscuro.
+ */
+.form-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* ─── Form Sections ──────────────────────────────────────────────────────────── */
+.form-section {
+    margin-bottom: 28px;
+}
+
+.form-section:last-child {
+    margin-bottom: 0;
+}
+
+.form-section-title {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.form-section-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--teal);
+}
+
+/* ─── Form Field ─────────────────────────────────────────────────────────────── */
+.form-field {
+    margin-bottom: 20px;
+    animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+.form-field:last-child {
+    margin-bottom: 0;
+}
+
+.form-label {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+/*
+ * Inputs: tipografía monoespaciada para alineación visual.
+ * Se transicionan solo border-color y box-shadow (no 'all') para evitar
+ * repaints innecesarios en propiedades que no cambian.
+ */
+.form-input,
+.form-select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-sizing: border-box;
+}
+
+.form-input::placeholder {
+    color: var(--muted);
+    opacity: 0.6;
+}
+
+.form-input:focus,
+.form-select:focus {
+    border-color: var(--teal);
+    background: var(--bg);
+    box-shadow: 0 0 0 3px rgba(108, 189, 181, 0.1);
+}
+
+/*
+ * Estado de error: borde rojo + shake.
+ * El cubic-bezier del shake (0.36, 0.07, 0.19, 0.97) da un movimiento brusco
+ * que simula la vibración de "no válido" sin ser molesto.
+ */
+.form-input.input-error {
+    border-color: #c41e3a;
+    background: rgba(196, 30, 58, 0.03);
+    box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.08);
+    animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+    will-change: transform;
+}
+
+.form-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%237a8a82' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+}
+
+.form-select option {
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* ─── Form Hint (error) ──────────────────────────────────────────────────────── */
+.form-hint {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 6px;
+    letter-spacing: 0.5px;
+    line-height: 1.6;
+}
+
+.form-hint.error {
+    color: #c41e3a;
+}
+
+.hint-animate {
+    animation: hintSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: opacity, transform;
+}
+
+/* ─── Submit Button ──────────────────────────────────────────────────────────── */
+.btn-submit {
+    width: 100%;
+    background: var(--dark);
+    color: var(--cream);
+    border: none;
+    border-radius: 8px;
+    padding: 13px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 500;
+    margin-top: 8px;
+    will-change: transform;
+}
+
+.btn-submit:hover {
+    background: #2d3a38;
+    transform: translate3d(0, -1px, 0);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+}
+
+.btn-submit:active {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.9;
+}
+
+/* ─── Task Count Badge ───────────────────────────────────────────────────────── */
+.task-count-badge {
+    margin-left: auto;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--teal);
+    padding: 3px 12px;
+    border: 1px solid rgba(108, 189, 181, 0.35);
+    border-radius: 20px;
+    background: rgba(108, 189, 181, 0.1);
+    font-weight: 600;
+}
+
+/*
+ * Estilos de tabla.
+ * DataTables genera su propio markup (clases .even/.odd, .sorting, etc).
+ * Se sobreescriben con selectores de mayor especificidad.
+ * Los !important son necesarios porque DataTables aplica estilos inline.
+ */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.table-container {
+    max-width: 100%;
+    min-width: 0;
+}
+
+#tablaTareas { width: 100% !important; border-collapse: separate; border-spacing: 0; }
+
+#tablaTareas thead th {
+    background: var(--cream);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+}
+
+#tablaTareas tbody td {
+    padding: 12px 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+    background: transparent;
+}
+
+#tablaTareas tbody tr {
+    transition: background 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#tablaTareas tbody tr:hover {
+    background: rgba(108, 189, 181, 0.05) !important;
+}
+
+#tablaTareas tbody tr.even { background: rgba(0, 0, 0, 0.015); }
+#tablaTareas tbody tr.odd { background: transparent; }
+
+/*
+ * Badges de prioridad: pills con color semántico.
+ * Alta → rojo, Media → ámbar, Baja → teal (el color principal del sistema).
+ * Se usan bordes translúcidos sobre fondos translúcidos para que
+ * se integren con cualquier fondo de fila (par/impar/hover).
+ */
+.priority-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+.priority-alta {
+    color: #c41e3a;
+    background: rgba(196, 30, 58, 0.08);
+    border: 1px solid rgba(196, 30, 58, 0.2);
+}
+
+.priority-media {
+    color: #d4880f;
+    background: rgba(212, 136, 15, 0.08);
+    border: 1px solid rgba(212, 136, 15, 0.2);
+}
+
+.priority-baja {
+    color: var(--teal);
+    background: rgba(108, 189, 181, 0.08);
+    border: 1px solid rgba(108, 189, 181, 0.2);
+}
+
+/* ─── Delete Button ──────────────────────────────────────────────────────────── */
+.btn-eliminar {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #c41e3a;
+    background: rgba(196, 30, 58, 0.05);
+    border: 1px solid rgba(196, 30, 58, 0.2);
+    border-radius: 8px;
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: background 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    will-change: transform;
+}
+
+.btn-eliminar:hover {
+    background: rgba(196, 30, 58, 0.12);
+    border-color: #c41e3a;
+    transform: translate3d(0, -1px, 0);
+    box-shadow: 0 4px 12px rgba(196, 30, 58, 0.12);
+}
+
+.btn-eliminar:active {
+    transform: translate3d(0, 0, 0);
+}
+
+/*
+ * DataTables overrides.
+ * DT viene con sus propios estilos (jquery.dataTables.min.css).
+ * Se sobreescriben para que usen la paleta del TP5 y tipografía DM Mono.
+ * Los !important son inevitables porque DT tiene especificidad alta internamente.
+ * Se reemplazan los iconos de sorting nativos (imágenes) por caracteres Unicode.
+ */
+.dataTables_wrapper {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 11px;
+}
+
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+    color: var(--muted) !important;
+    padding: 8px 0;
+}
+
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 10px;
+    outline: none;
+    transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dataTables_wrapper .dataTables_filter input:focus,
+.dataTables_wrapper .dataTables_length select:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(108, 189, 181, 0.1);
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    color: var(--muted) !important;
+    background: transparent !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    margin: 0 2px;
+    padding: 4px 10px !important;
+    transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+                background 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: var(--mono);
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    color: var(--dark) !important;
+    background: rgba(108, 189, 181, 0.08) !important;
+    border-color: var(--teal) !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    color: #fff !important;
+    background: var(--dark) !important;
+    border-color: var(--dark) !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+    opacity: 0.35;
+}
+
+.dataTables_wrapper .dataTables_empty {
+    color: var(--muted);
+    padding: 2rem !important;
+    font-style: italic;
+    font-family: var(--mono);
+}
+
+table.dataTable thead .sorting,
+table.dataTable thead .sorting_asc,
+table.dataTable thead .sorting_desc {
+    background-image: none !important;
+}
+
+table.dataTable thead .sorting::after { content: '⇅'; margin-left: 6px; opacity: 0.3; }
+table.dataTable thead .sorting_asc::after { content: '↑'; margin-left: 6px; opacity: 1; color: var(--teal); }
+table.dataTable thead .sorting_desc::after { content: '↓'; margin-left: 6px; opacity: 1; color: var(--teal); }
+
+/*
+ * Toast: notificación fixed que aparece abajo a la derecha.
+ * Se crea y destruye dinámicamente desde app.js.
+ * La transición usa translate3d para GPU compositing.
+ */
+.toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--teal);
+    border-radius: 14px;
+    padding: 14px 20px;
+    font-family: var(--mono);
+    font-size: 11px;
+    box-shadow: var(--shadow);
+    z-index: 1000;
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+    pointer-events: none;
+    letter-spacing: 0.3px;
+}
+
+.toast.toast-success { border-left-color: var(--teal); }
+.toast.toast-error { border-left-color: #c41e3a; }
+.toast.show { opacity: 1; transform: translate3d(0, 0, 0); pointer-events: auto; }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   FOOTER (copiado del TP5 footer.css)
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.footer {
+    --ft-teal: #7DD3C8;
+    --ft-teal-light: #A3E4DC;
+    --ft-teal-dark: #5BBFB3;
+    --ft-teal-bg: rgba(125, 211, 200, 0.10);
+    --ft-teal-border: rgba(125, 211, 200, 0.35);
+    --ft-teal-glow: rgba(125, 211, 200, 0.25);
+}
+
+.footer {
+    background: #000;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.footer-accent-line {
+    height: 2px;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            var(--ft-teal) 20%,
+            var(--ft-teal-light) 50%,
+            var(--ft-teal) 80%,
+            transparent 100%);
+    opacity: 0.6;
+    background-size: 200% 100%;
+    animation: shimmer 4s ease-in-out infinite;
+    will-change: background-position;
+}
+
+@keyframes shimmer {
+    0%, 100% { background-position: 200% 0; }
+    50% { background-position: -200% 0; }
+}
+
+.footer-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    padding: 48px 48px 36px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.footer-col-title {
+    font-size: 9px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.footer-col-title::before {
+    content: '';
+    width: 16px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--ft-teal), transparent);
+    display: inline-block;
+    border-radius: 1px;
+}
+
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+a.footer-link {
+    font-size: 12px;
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                background 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                padding-left 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.2px;
+    padding: 5px 10px;
+    margin: -5px -10px;
+    border-radius: 8px;
+    position: relative;
+}
+
+a.footer-link::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%) scaleX(0);
+    width: 3px;
+    height: 60%;
+    background: var(--ft-teal);
+    border-radius: 2px;
+    transition: transform 0.25s ease;
+}
+
+a.footer-link:hover {
+    color: var(--ft-teal);
+    background: var(--ft-teal-bg);
+    padding-left: 14px;
+}
+
+a.footer-link:hover::before {
+    transform: translateY(-50%) scaleX(1);
+}
+
+.footer-link.static {
+    font-size: 11px;
+    color: var(--text);
+    letter-spacing: 0.2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.7;
+    padding: 4px 0;
+    transition: opacity 0.25s ease;
+}
+
+.footer-link.static:hover {
+    opacity: 1;
+}
+
+.footer-icon {
+    flex-shrink: 0;
+    opacity: 0.5;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    width: 14px;
+    height: 14px;
+}
+
+a.footer-link:hover .footer-icon {
+    opacity: 1;
+    transform: scale(1.15);
+}
+
+.footer-divider {
+    height: 1px;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            var(--border) 15%,
+            var(--border) 85%,
+            transparent 100%);
+    margin: 0 48px;
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 48px;
+    gap: 16px;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.footer-copy {
+    font-size: 10px;
+    color: var(--text);
+    letter-spacing: 0.6px;
+    opacity: 0.55;
+}
+
+.footer-bottom-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.footer-tech {
+    font-size: 10px;
+    color: var(--text);
+    letter-spacing: 0.6px;
+    opacity: 0.45;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════════ */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translate3d(0, 12px, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translate3d(0, -6px, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    20% { transform: translate3d(-5px, 0, 0); }
+    40% { transform: translate3d(5px, 0, 0); }
+    60% { transform: translate3d(-3px, 0, 0); }
+    80% { transform: translate3d(3px, 0, 0); }
+}
+
+@keyframes hintSlideIn {
+    from { opacity: 0; transform: translate3d(0, -4px, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+/* ─── Reduce motion for accessibility ────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    .register {
+        padding: 40px 24px;
+    }
+
+    .form-container {
+        padding: 24px;
+    }
+
+    .register-title {
+        font-size: 26px;
+    }
+
+    .footer-main {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        padding: 36px 28px 28px;
+    }
+
+    .footer-divider {
+        margin: 0 28px;
+    }
+
+    .footer-bottom {
+        padding: 16px 28px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .register {
+        padding: 32px 16px;
+    }
+
+    .form-container {
+        padding: 18px;
+    }
+
+    .register-title {
+        font-size: 22px;
+    }
+
+    .register-eyebrow::before,
+    .register-eyebrow::after {
+        display: none;
+    }
+
+    .footer-main {
+        padding: 32px 20px 24px;
+    }
+
+    .footer-col {
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-links {
+        align-items: center;
+    }
+
+    .footer-divider {
+        margin: 0 20px;
+    }
+
+    .footer-bottom {
+        padding: 16px 20px;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-bottom-right {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    a.footer-link:hover {
+        padding-left: 10px;
+    }
+
+    a.footer-link:hover::before {
+        transform: translateY(-50%) scaleX(0);
+    }
+}

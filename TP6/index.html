@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gestor de Tareas de Proyecto - TP6 Lenguajes III">
+    <title>Gestor de Tareas de Proyecto</title>
+
+    <!--
+        index.html — Gestor de Tareas de Proyecto (TP6)
+        Lenguajes III · UCASAL · 2026
+
+        Estructura:
+         1. Formulario de alta de tareas (nombre + prioridad)
+         2. Tabla DataTables con columnas: Tarea, Prioridad, Acción
+         3. Footer reutilizado del TP5
+
+        Notas de diseño:
+         - Se reutilizan las clases del TP5 (register-*, form-*, footer-*) para
+           mantener coherencia visual entre los TPs del curso.
+         - La tabla usa id="tablaTareas" como pide la consigna.
+         - El título tiene id="titulo-principal" para el cambio de color con jQuery.
+         - El div #errorNombre arranca con display:none y se muestra con .show() de jQuery.
+         - El script test.js se incluye al final para pruebas automáticas.
+           Debe eliminarse antes de entregar.
+    -->
+
+    <!-- Tipografías: DM Serif Display para títulos, DM Mono para inputs/código -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+
+    <!-- DataTables: estilos base que luego se sobreescriben en styles.css -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div id="root">
+
+        <div class="register">
+
+            <!-- Encabezado: eyebrow + título + subtítulo -->
+            <div class="register-header">
+                <div class="register-eyebrow">LENGUAJES III</div>
+                <h1 id="titulo-principal" class="register-title">Gestor de <em>Tareas</em></h1>
+                <p class="register-subtitle">Organizá y gestioná las tareas de tu proyecto de forma eficiente.</p>
+            </div>
+
+            <!--
+                Formulario de alta.
+                autocomplete="off" evita sugerencias del browser que tapan el input.
+                novalidate desactiva la validación HTML5 (se valida con jQuery).
+            -->
+            <form id="formTarea" class="form-container" autocomplete="off" novalidate>
+                <div class="form-section">
+                    <div class="form-section-title">Nueva Tarea</div>
+
+                    <div class="form-field">
+                        <label class="form-label" for="nombreTarea">Nombre de la tarea</label>
+                        <input type="text" id="nombreTarea" class="form-input" placeholder="Ej: Diseñar la base de datos...">
+                        <!-- Mensaje de error. Oculto por defecto, se muestra desde app.js -->
+                        <div id="errorNombre" class="form-hint error" style="display:none;"></div>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-label" for="prioridadTarea">Prioridad</label>
+                        <select id="prioridadTarea" class="form-select">
+                            <option value="Alta">Alta</option>
+                            <option value="Media" selected>Media</option>
+                            <option value="Baja">Baja</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" id="btnAgregar" class="btn-submit">Agregar Tarea</button>
+            </form>
+
+            <!--
+                Tabla de tareas.
+                DataTables se inicializa sobre #tablaTareas en app.js.
+                Las filas se agregan dinámicamente, no hay datos estáticos.
+            -->
+            <div class="form-container table-container">
+                <div class="form-section">
+                    <div class="form-section-title">
+                        Listado de Tareas
+                        <span id="taskCount" class="task-count-badge">0 tareas</span>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="tablaTareas" class="display" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Tarea</th>
+                                    <th>Prioridad</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!--
+            Footer: misma estructura que Footer.jsx del TP5.
+            Adaptado de JSX a HTML plano (className → class, etc).
+        -->
+        <footer class="footer">
+            <div class="footer-accent-line"></div>
+
+            <div class="footer-main" style="justify-content: center;">
+
+                <div class="footer-col">
+                    <span class="footer-col-title">Proyectos</span>
+                    <div class="footer-links">
+                        <a href="https://github.com/lautioliver/numerika-ai" target="_blank" rel="noopener noreferrer" class="footer-link">
+                            <svg class="footer-icon" viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
+                                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/>
+                            </svg>
+                            NumérikaAI
+                        </a>
+                        <a href="https://github.com/lautioliver/sistemas-operativos-ucasal" target="_blank" rel="noopener noreferrer" class="footer-link">
+                            <svg class="footer-icon" viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
+                                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/>
+                            </svg>
+                            Sistemas-Operativos
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <span class="footer-col-title">Info</span>
+                    <div class="footer-links">
+                        <span class="footer-link static">UCASAL · Salta, Argentina</span>
+                        <span class="footer-link static">Lenguajes III · 2026</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="footer-divider"></div>
+
+            <div class="footer-bottom">
+                <span class="footer-copy">&copy; 2026 NumérikaAI</span>
+                <div class="footer-bottom-right">
+                    <span class="footer-tech">jQuery · DataTables</span>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- jQuery primero, DataTables segundo (depende de jQuery), app.js tercero -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="app.js"></script>
+    <!-- Test automático — eliminar antes de entregar -->
+    <script src="test.js"></script>
+</body>
+</html>
